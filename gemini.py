@@ -28,11 +28,18 @@ try:
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 
     # Create vector store using Chroma
-    vectorstore = Chroma.from_documents(
+    from langchain_chroma import Chroma
+import tempfile
+
+# Create a temporary directory (won't persist, good for Streamlit Cloud)
+temp_dir = tempfile.TemporaryDirectory()
+
+vectorstore = Chroma.from_documents(
     documents=docs,
     embedding=embeddings,
-    persist_directory=None  # Prevents writing to disk (important for Streamlit Cloud)
+    persist_directory=temp_dir.name
 )
+
 
     retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 10})
 
