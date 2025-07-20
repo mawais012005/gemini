@@ -28,7 +28,12 @@ try:
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 
     # Create vector store using Chroma
-    vectorstore = Chroma.from_documents(documents=docs, embedding=embeddings)
+    vectorstore = Chroma.from_documents(
+    documents=docs,
+    embedding=embeddings,
+    persist_directory=None  # Prevents writing to disk (important for Streamlit Cloud)
+)
+
     retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 10})
 
     # Initialize Gemini LLM
